@@ -18,6 +18,35 @@ app.get("/", function (request, response) {
 });
 
 //START OF YOUR CODE...
+app.get("/quotes", function (request, response) {
+  response.send(quotes);
+});
+
+app.get("/quotes/random", function (request, response) {
+  const quote = pickFromArray(quotes);
+  response.send(quote);
+});
+
+app.get("/quotes/search", function (request, response) {
+ let termQuery = request.query.term;
+ let authorQuery = request.query.author;
+  console.log(termQuery);
+
+  let result = []
+ for (const obj of quotes){
+  let objMatchesTerm = obj.quote.toLocaleLowerCase()
+  .includes(termQuery.toLocaleLowerCase());
+  let objMatchesAuthor = obj.quote.toLocaleLowerCase()
+  .includes(authorQuery.toLocaleLowerCase());
+
+
+    if (objMatchesTerm || objMatchesAuthor){
+      result.push(obj);
+    }
+    }
+   response.send(result);
+  });
+
 
 //...END OF YOUR CODE
 
@@ -26,7 +55,9 @@ app.get("/", function (request, response) {
 //example: pickFromArray(myContactsArray)
 //
 function pickFromArray(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
+  const random=Math.random() * arr.length
+  const randomIndex = Math.floor(random);
+  return arr[randomIndex];
 }
 
 //Start our server so that it listens for HTTP requests!
