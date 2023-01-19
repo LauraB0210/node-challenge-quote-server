@@ -23,29 +23,14 @@ app.get("/quotes", function (request, response) {
 });
 
 app.get("/quotes/random", function (request, response) {
-  const quote = pickFromArray(quotes);
-  response.send(quote);
+ response.send(pickFromArray(quotes));
 });
 
-app.get("/quotes/search", function (request, response) {
- let termQuery = request.query.term;
- let authorQuery = request.query.author;
-  console.log(termQuery);
-
-  let result = []
- for (const obj of quotes){
-  let objMatchesTerm = obj.quote.toLocaleLowerCase()
-  .includes(termQuery.toLocaleLowerCase());
-  let objMatchesAuthor = obj.quote.toLocaleLowerCase()
-  .includes(authorQuery.toLocaleLowerCase());
-
-
-    if (objMatchesTerm || objMatchesAuthor){
-      result.push(obj);
-    }
-    }
-   response.send(result);
-  });
+ app.get('/quotes/search', (request, response) => {
+  const term = request.query.term.toLowerCase()  
+  const search = quotes.filter(quote => quote.quote.toLowerCase().includes(term) || quote.author.toLowerCase().includes(term))
+  response.send(search)
+});
 
 
 //...END OF YOUR CODE
